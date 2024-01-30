@@ -1,9 +1,11 @@
 #include <iostream>
 #include "nhlomann/json.hpp"
+#include "difficulty.cpp"
 #include <fstream>
 #include <random>
 using namespace std;
 using json = nlohmann::json;
+
 int main() {
 
     ifstream file("words.json");
@@ -21,7 +23,7 @@ int main() {
     file.close();
 
     // Display categories
-    cout << "Categories:\n";
+    cout << "Categories:\n \n";
 
     // Loop through the categories
 
@@ -32,7 +34,7 @@ int main() {
     // Ask the user to select a category
     string category;
 
-    cout << "Select a category: ";
+    cout << "Select a category:";
 
     while (true) {
         cin >> category;
@@ -43,7 +45,7 @@ int main() {
 
         cout << "Category not found.\n";
         cout << "Try again.\n";
-        cout << "Select a category: ";
+        cout << "Select a category: \n";
         for (auto& category : hangmanData.items()) {
             cout << category.key() << endl;
         }
@@ -51,21 +53,7 @@ int main() {
     }
 
     // ask the user to select a difficulty
-    int difficulty;
-
-    cout << "Select a difficulty (1-3): ";
-
-    while (true) {
-        cin >> difficulty;
-
-        if (difficulty >= 1 && difficulty <= 3) {
-            break;
-        }
-
-        cout << "Invalid difficulty.\n";
-        cout << "Try again.\n";
-        cout << "Select a difficulty (1-3): ";
-    }
+    int difficultyLevel = difficulty();
 
     // choose a random word from the category using hardware
     random_device rd;
@@ -78,12 +66,13 @@ int main() {
 
     cout << hiddenWord << endl;
 
-    cout << word << endl; // TODO: remove this line
+    // uncomment to see the word
+    // cout << word << endl;
 
     // assign lives based on difficulty
     int lives = 0;
 
-    switch (difficulty) {
+    switch (difficultyLevel) {
         case 1:
             lives = 10;
             break;
@@ -95,55 +84,56 @@ int main() {
             break;
     }
     // loop until the user wins or loses
-    while (lives > 0) {
-      bool found = false;
+    while (lives >= 0) {
+    if (lives == 0) {
+        cout << "You lose!\n";
+        cout << "The word was: " << word << endl;
 
-      cout << "Lives: " << lives << endl;
+        cout << "Play again? (y/n): ";
 
-      if (lives == 1) {
-          cout << "Last chance!\n";
-      }
+        char playAgain;
 
-      if (lives == 0) {
-          cout << "You lose!\n";
-          cout << "The word was: " << word << endl;
+        cin >> playAgain;
 
-          cout << "Play again? (y/n): ";
-
-          char playAgain;
-
-          cin >> playAgain;
-
-          if (playAgain == 'y') {
-              main();
-          } else {
-              cout << "Thanks for playing!\n";
-          }
-          break;
-      }
-
-      char letter;
-
-      cout << "Guess a letter: ";
-      cin >> letter;
-
-      for (int i = 0; i < word.size(); i++) {
-          if (word[i] == letter) {
-              hiddenWord[i] = letter;
-              found = true;
-          }
-      }
-
-      if (!found) {
-          cout << "Letter not found.\n";
-          lives--;
-      }
-
-      cout << hiddenWord << endl;
-
-      if (hiddenWord == word) {
-          cout << "You win!\n";
-          break;
-      }
+        if (playAgain == 'y') {
+            main();
+        } else if (playAgain == 'n'){
+            cout << "Thanks for playing!\n";
+        } else {
+            cout << "Invalid input.\n";
+        }
+        break;
     }
+    bool found = false;
+
+    cout << "Lives: " << lives << endl;
+
+    if (lives == 1) {
+        cout << "Last chance!\n";
+    }
+
+    char letter;
+
+    cout << "Guess a letter: ";
+    cin >> letter;
+
+    for (size_t i = 0; i < word.size(); i++) {
+        if (word[i] == letter) {
+            hiddenWord[i] = letter;
+            found = true;
+        }
+    }
+
+    if (!found) {
+        cout << "Letter not found.\n";
+        lives--;
+    }
+
+    cout << hiddenWord << endl;
+
+    if (hiddenWord == word) {
+        cout << "You win!\n";
+        break;
+    }
+}
 }
