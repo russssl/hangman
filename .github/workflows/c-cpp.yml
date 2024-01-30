@@ -13,6 +13,6 @@ jobs:
 
     steps:
     - name: Compile c++
-    - uses: Eason-S-Lu/CPP-Test-Compile@v1.0
+      uses: Eason-S-Lu/CPP-Test-Compile@v1.0
     - name: Lint
-    - uses: Dal-Papa/actions-uncrustify@v1.2
+      uses: Dal-Papa/actions-uncrustify@v1.2
