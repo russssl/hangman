@@ -22,11 +22,21 @@ int main() {
     // Close the file
     file.close();
 
-    // Display categories
-    cout << "Categories:\n \n";
+    // display the title
 
-    // Loop through the categories
+    cout << "Hangman\n";
 
+    // Display hello message with current date and time
+
+    time_t now = time(0);
+
+    char* dt = ctime(&now);
+
+    cout << "Hello, today is " << dt << endl;
+
+    cout << "Welcome to Hangman!" << endl << "Please select a category:" << endl;
+
+    // Loop through the categories and display them
     for (auto& category : hangmanData.items()) {
         cout << category.key() << endl;
     }
@@ -36,6 +46,7 @@ int main() {
 
     cout << "Select a category:";
 
+    // validate the category input
     while (true) {
         cin >> category;
 
@@ -55,7 +66,7 @@ int main() {
     // ask the user to select a difficulty
     int difficultyLevel = difficulty();
 
-    // choose a random word from the category using hardware
+    // choose a random word from the category using hardware entropy
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<> distr(0, hangmanData[category].size() - 1);
@@ -77,10 +88,19 @@ int main() {
             lives = 10;
             break;
         case 2:
-            lives = 7;
+            lives = 8;
             break;
         case 3:
-            lives = 5;
+            lives = 6;
+            break;
+        case 4:
+            lives = 4;
+            break;
+        case 5:
+            lives = 2;
+            break;
+        case 100:
+            lives: 0;
             break;
     }
     // loop until the user wins or loses
